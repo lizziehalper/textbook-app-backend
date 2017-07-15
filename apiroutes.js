@@ -140,7 +140,7 @@ router.get('/feed', function(req,res) {
 })
 // POST: FEED VIEW
 router.post('/feed', function(req,res) {
-    res.send('The registration view!')
+    res.send('The FEED view!')
 })
 
 // POST: FEED VIEW: render all the users, filtered by mutual friends / distance
@@ -223,17 +223,34 @@ router.post('/feed', function(req,res) {
 router.get('/settings', function(req,res) {
   res.send('The settings view!')
 })
-// POST: SETTINGS VIEW:
-router.post('/settings', function(req,res) {
-  FB.api('/me', { fields: ['id'] }, function (response) {
-    if(!response || response.error) {
-      console.log(!response ? 'error occurred' : response.error);
-      return;
-    }else{
-      // FINISH
-    }
-  })
-})
+// POST: SETTINGS VIEW---->
+    // Flags:name, pic, toggle, delete;
+    // Age: filter the age of the strangers
+    // Invite friends: send link to get app
+    // Distance: filter the radius
+// router.post('/settings', function(req,res) {
+//   FB.api('/me', { fields: ['id'] }, function (response) {
+//     if(!response || response.error) {
+//       console.log(!response ? 'error occurred' : response.error);
+//       return;
+//     }else{
+//       // FINISH
+//       // var userResponses = req.body.flags;
+//       // var DOB = req.body.DOB;
+//       var userId = response.id;
+//       var newFlags = req.body.flags;
+//       var strangerAge = req.body.age;
+//       var filteredDistance = req.body.distance;
+//       // create new user
+//       User.findBy({userId: userId}, function(err, foundUser){
+//         if(err){
+//           res.json({failure: 'Could not find user'})
+//         }else{
+//           // once we find our user in the database, we are going to update their flags
+//           foundUser
+//     }
+//   })
+// })
 
 // MESSAGES VIEW: INBOX VIEW,
 router.get('/messages', function(req,res) {
