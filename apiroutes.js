@@ -136,114 +136,11 @@ router.get('/feed', function(req,res) {
     res.send('The FEED view!')
 })
 
-// POST: FEED VIEW: render all the users, filtered by mutual friends / distance
-// router.post('/feed', function(req,res) {
-//   FB.api('/me', { fields: ['id','friends'] }, function (res) {
-//     if(!res || res.error) {
-//       console.log(!res ? 'error occurred' : res.error);
-//       return;
-//     }else{
-//       // Find the user based on the id
-//       // grab all the flags that are toggled on
-//       // search all users with those same flags and sort them according to same friends
-//       var userId = res.id
-//       var userFriends = res.friends
-//       User.findBy({userId: userId}, function(err, foundUser){
-//         if(err){
-//           res.json({failure: 'Could not find user'})
-//         }else{
-//           var userFlags = foundUser.flags;
-//           User.find({flags: userFlags }, function(err, usersWithFlags){
-//             if(err){
-//               res.json({failure: 'Could not find matching users based on flags'})
-//             }else{
-//               // array of user objects we need to sort/filter based on key-> mutual friends /
-//               // usersWithFlags is an array of user objects
-//               console.log(usersWithFlags);
-//               usersWithFlags.sort(function(a,b){
-//                 return b.friends - a.friends;
-//               })
-//               // now that the array of user objects is sorted, we want to render them on the view
-//
-//               // userFriends represents "our persons" friendslist
-//               // compare our friends to all the users with the same flags
-//               var mutualFriends = 0;
-//               userFriends.forEach(function(friend){
-//                 usersWithFlags.forEach(function(userWithMutualFlags){
-//                   userWithMutualFlags.friends.forEach(function(friendOfHill){
-//                     if(friendOfHill === friend){
-//                       mutualFriends++;
-//                     }
-//                   })
-//                 })
-//                 userWithMutualFlags.mutualFriends = mutualFriends;
-//                 mutualFriends = 0;
-//               })
-//
-//
-//               usersWithFlags.forEach(function(userWithMutualFlags){
-//                 var fname = userWithMutualFlags.fname;
-//                 var lname = userWithMutualFlags.lname;
-//                 var mutualFriends = userWithMutualFlags.mutualFriends;
-//                 // var location = users.location; --> GET LOCATION FROM USERS
-//                 var flags = userWithMutualFlags.flags
-//               })
-//                 var newStranger = new Stranger({
-//                   fname: fname,
-//                   lname: lname,
-//                   // distance: Number,    ----> GET LOCATION SERVICES RUNNING
-//                   commonFlags: flags,
-//                   mutualFriends: mutualFriends
-//                 })
-//                 newStranger.save(function(err, savedStranger){
-//                   if(err){
-//                     res.json({failure: 'Failed to post'})
-//                   }else{
-//                     res.json({success: true,
-//                     response: savedStranger})
-//                   }
-//                 })
-//             }
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
-
-
 // GET: SETTINGS VIEW:
 router.get('/settings', function(req,res) {
   res.send('The settings view!')
 })
-// POST: SETTINGS VIEW---->
-    // Flags:name, pic, toggle, delete;
-    // Age: filter the age of the strangers
-    // Invite friends: send link to get app
-    // Distance: filter the radius
-// router.post('/settings', function(req,res) {
-//   FB.api('/me', { fields: ['id'] }, function (response) {
-//     if(!response || response.error) {
-//       console.log(!response ? 'error occurred' : response.error);
-//       return;
-//     }else{
-//       // FINISH
-//       // var userResponses = req.body.flags;
-//       // var DOB = req.body.DOB;
-//       var userId = response.id;
-//       var newFlags = req.body.flags;
-//       var strangerAge = req.body.age;
-//       var filteredDistance = req.body.distance;
-//       // create new user
-//       User.findBy({userId: userId}, function(err, foundUser){
-//         if(err){
-//           res.json({failure: 'Could not find user'})
-//         }else{
-//           // once we find our user in the database, we are going to update their flags
-//           foundUser
-//     }
-//   })
-// })
+
 
 // MESSAGES VIEW: INBOX VIEW
 router.post('/messages', function(req,res) {
