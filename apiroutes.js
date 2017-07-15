@@ -305,43 +305,43 @@ router.get('/messages/:user_id', function(req,res) {
   })
 })
 // POST --- MESSAGES VIEW:DIRECT MESSAGE VIEW
-router.post('/messages/:user_id', function(req,res) {
-  var token = req.body.token;
-  var messageTo = req.params.user_id;
-
-  var messageContent = req.body.content;
-  var messageSender = req.body.from;
-  var messageReceiver = req.body.to;
-
-  // access facebook to get relevant info to create a new user
-  FB.setAccessToken(token);
-
-  FB.api('/me', { fields: ['id'] }, function (response) {
-    if(!response || response.error) {
-      console.log(!response ? 'error occurred' : response.error);
-      return;
-    }else{
-      User.findById({userId:userId}, function(err, foundUser){
-        var myMessages = foundUser.messages;
-
-        var newMessage = new Message({
-          from: messageSender,
-          to: messageReceiver,
-          content: messageContent
-        });
-        newMessage.save(function(err, savedMessage) {
-          if(err){
-            res.json({failure: "Could not make new message"})
-          }else{
-            myMessages.push(savedMessage);
-            foundUser.save();
-          }
-        })
-
-
-
-      // alter the user object with the updates messages
-})
+// router.post('/messages/:user_id', function(req,res) {
+//   var token = req.body.token;
+//   var messageTo = req.params.user_id;
+//
+//   var messageContent = req.body.content;
+//   var messageSender = req.body.from;
+//   var messageReceiver = req.body.to;
+//
+//   // access facebook to get relevant info to create a new user
+//   FB.setAccessToken(token);
+//
+//   FB.api('/me', { fields: ['id'] }, function (response) {
+//     if(!response || response.error) {
+//       console.log(!response ? 'error occurred' : response.error);
+//       return;
+//     }else{
+//       User.findById({userId:userId}, function(err, foundUser){
+//         var myMessages = foundUser.messages;
+//
+//         var newMessage = new Message({
+//           from: messageSender,
+//           to: messageReceiver,
+//           content: messageContent
+//         });
+//         newMessage.save(function(err, savedMessage) {
+//           if(err){
+//             res.json({failure: "Could not make new message"})
+//           }else{
+//             myMessages.push(savedMessage);
+//             foundUser.save();
+//           }
+//         })
+//
+//
+//
+//       // alter the user object with the updates messages
+// })
 //
 
 
