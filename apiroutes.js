@@ -35,7 +35,7 @@ router.post('/login', function(req,res) {
   FB.api('/me', { fields: ['id', 'first_name', 'last_name', 'friends', 'picture'] }, function (response) {
     if(!response || response.error) {
       console.log(!response ? 'error occurred' : response.error);
-      return;
+      res.json({failure: response.error});
     }else{
       var userId = response.id;
       var fname = response.first_name;
@@ -104,13 +104,47 @@ router.post('/registration', function(req,res) {
   })
 })
 
+// GET: FEED VIEW
+router.get('/feed', function(req,res) {
+  res.send('The feed view!')
+})
+// POST: FEED VIEW: render all the users, filtered by mutual friends / distance
+router.post('/feed', function(req,res) {
+  FB.api('/me', { fields: ['id'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
+      return;
+    }else{
+      // Find the user based on the id
+      // grab all the flags that are toggled on
+      // search all users with those same flags and sort them according to same friends
+      var userId = response.id
+      User.findBy({userId: userId}, function(err, foundUser){
+        if(err){
+          res.json({failure: 'Could not find user'})
+        }else{
+          var userFlags = foundUser.flags;
+          User.findBy({flags: userFlags }, function(err, usersWithFlags){
+            if(err){
+              res.json({failure: 'Could not find matching users based on flags'})
+            }else{
+              usersWithFlags
+            }
+          })
+})
+
+
 // GET: SETTINGS VIEW:
 router.get('/settings', function(req,res) {
-
+  res.send('The settings view!')
 })
 // POST: SETTINGS VIEW:
 router.post('/settings', function(req,res) {
-
+  FB.api('/me', { fields: ['id'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
+      return;
+    }else{
 })
 
 // MESSAGES VIEW: INBOX VIEW,
