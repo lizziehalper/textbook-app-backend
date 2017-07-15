@@ -8,7 +8,7 @@ var User = models.User;
 var Token = models.Token;
 var Message = models.Message;
 
-
+console.log("please work!");
 // ROUTES:
 router.get('/', function(req,res){
   res.send('it works!')
