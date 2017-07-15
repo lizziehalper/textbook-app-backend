@@ -10,6 +10,9 @@ var Message = models.Message;
 
 
 // ROUTES:
+router.get('/', function(req,res){
+  res.redirect('/login');
+})
 
 // LOGIN SCREEN-->
 router.post('/login', function(req,res) {

@@ -27,6 +27,6 @@ var apiroutes = require('./apiroutes')
 app.use('/api', apiroutes)
 
 // start my server
-app.listen('3000', function() {
+app.listen(process.env.PORT || '3000', function() {
   console.log('Yee, the server is up!');
 })
