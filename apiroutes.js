@@ -50,7 +50,8 @@ router.post('/login', function(req,res) {
         prof: prof,
         userId: userId,
         flags: [],
-        age: null
+        age: null,
+        messages: []
       })
     // save the user on our DB with completed user data
       newUser.save(function(err, savedUser){
@@ -255,13 +256,16 @@ router.get('/messages', function(req,res) {
     }else{
       // Find the user based on the id
       var userId = res.id;
-      Message.find(function(err, messages){
+      User.findById({userId:userId}, function(err, foundUser){
+        var userMessages = foundUser.messages;
+      // })
+      // Message.find(function(err, messages){
         if(err){
           res.json({failure: "Could not find messages"})
         }else{
           res.json({
             success: true,
-            response: messages
+            response: userMessages
           })
         }
       })
