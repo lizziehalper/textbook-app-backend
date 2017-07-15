@@ -244,12 +244,12 @@ router.get('/settings', function(req,res) {
 // })
 
 // MESSAGES VIEW: INBOX VIEW
-router.get('/messages', function(req,res) {
+router.post('/messages', function(req,res) {
   var token = req.body.token;
 
   // access facebook to get relevant info to create a new user
   FB.setAccessToken(token);
-  FB.api('/me', { fields: ['id','friends'] }, function (res) {
+  FB.api('/me', { fields: ['id'] }, function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
       return;
@@ -275,11 +275,51 @@ router.get('/messages', function(req,res) {
 
 // GET --- MESSAGES VIEW:DIRECT MESSAGE VIEW
 router.get('/messages/:user_id', function(req,res) {
-  res.json({message: 'hello'})
+  var token = req.body.token;
+  var messageTo = req.params.user_id;
+
+  // access facebook to get relevant info to create a new user
+  FB.setAccessToken(token);
+  FB.api('/me', { fields: ['id','friends'] }, function (res) {
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      return;
+    }else{
+      // Find the user based on the id
+      var userId = res.id;
+      User.findById({userId:userId}, function(err, foundUser){
+        var myMessages = foundUser.messages;
+        var messagesToRender = [];
+        myMessages.forEach(function(message){
+          if(message.to===messageTo || message.from===messageTo){
+            messagesToRender.push(message);
+          }
+        })
+        if(err){
+          res.json({failure: "Could not find messages"})
+        }else{
+          res.json({success: messagesToRender})
+        }
+      })
+    }
+  })
 })
 // POST --- MESSAGES VIEW:DIRECT MESSAGE VIEW
 router.post('/messages/:user_id', function(req,res) {
-  res.json({message: 'hello'})
+  var token = req.body.token;
+  var messageTo = req.params.user_id;
+
+  // access facebook to get relevant info to create a new user
+  FB.setAccessToken(token);
+
+  FB.api('/me', { fields: ['id'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
+      return;
+    }else{
+      var userResponses = req.body.flags;
+      var DOB = req.body.DOB;
+      var userId = response.idres.json({message: 'hello'})
 })
 //
 

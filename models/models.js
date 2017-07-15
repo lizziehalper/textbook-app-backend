@@ -14,9 +14,10 @@ var userSchema = new Schema({
   prof: Object,
   userId: String,
   flags: Array,
-  age: Date
+  age: Date,
+  messages: Object
 })
-// STRANGER SCHEMA: 
+// STRANGER SCHEMA:
 var strangerSchema = new Schema({
   fname: String,
   lname: String,
