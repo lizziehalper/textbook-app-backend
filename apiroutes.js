@@ -30,24 +30,25 @@ router.post('/login', function(req,res) {
       var lname = response.user.last_name;
       var friendList = response.user.friends;
       var prof = response.user.picture;
+      var newUser = new User({
+        fname: fname,
+        lname: lname,
+        friends: friendList,
+        prof: prof
+      })
+    // save the user on our DB with completed user data
+      newUser.save(function(err, savedUser){
+        if(err){
+          res.json({failure: 'failed to save new user'})
+        }else{
+          res.json({success: true})
+          console.log('saved the new user!!')
+        }
+      })
     }
   });
 // create new user
-  var newUser = new User({
-    fname: fname,
-    lname: lname,
-    friends: friendList,
-    prof: prof
-  })
-// save the user on our DB with completed user data
-  newUser.save(function(err, savedUser){
-    if(err){
-      res.json({failure: 'failed to save new user'})
-    }else{
-      res.json({success: true})
-      console.log('saved the new user!!')
-    }
-  })
+
 })
 
 // GET login
