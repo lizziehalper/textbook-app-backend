@@ -91,15 +91,7 @@ router.post('/registration', function(req,res) {
         if(err){
           res.json({failure: 'Could not find user'})
         }else{
-          // foundUser.age = DOB;
-          // foundUser.flags = userResponses;
-          //
-          // foundUser.save(function(err, updatedUser){
-          //   if(err){
-          //     res.json({failure: 'failed to save new user'})
-          //   }else{
-          //     res.json({success: true})
-          //     // res.redirect('/api/feed')
+              res.json({success: true})
               console.log('saved the updated user with flags and DOB!!')
             }
           })
