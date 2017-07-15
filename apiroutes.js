@@ -1,7 +1,7 @@
 
-import FB from 'fb'; // or,
-import {FB, FacebookApiException} from 'fb';
+var FB = require('fb');
 
+var {FB, FacebookApiException} = require('fb');
 
 
 var express = require('express');
