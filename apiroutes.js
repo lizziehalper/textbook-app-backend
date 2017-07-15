@@ -250,13 +250,13 @@ router.post('/messages', function(req,res) {
 
   // access facebook to get relevant info to create a new user
   FB.setAccessToken(token);
-  FB.api('/me', { fields: ['id'] }, function (res) {
-    if(!res || res.error) {
-      console.log(!res ? 'error occurred' : res.error);
+  FB.api('/me', { fields: ['id'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
       return;
     }else{
       // Find the user based on the id
-      var userId = res.id;
+      var userId = response.id;
       User.findById({userId:userId}, function(err, foundUser){
         if(err){
           res.json({failure: "Could not find messages"})
