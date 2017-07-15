@@ -123,7 +123,7 @@ router.post('/feed', function(req,res) {
         }else{
           // -----FILTER USERS BY MUTUAL FRIENDS/DISTANCE HERE----
           console.log('saved the FEEED!')
-          res.json({success: true, response: foundUser.friends.data})
+          res.json({success: true, response: foundUser.friends[0].data})
           console.log(foundUser);
         }
       })
