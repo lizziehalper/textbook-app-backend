@@ -258,6 +258,7 @@ router.post('/messages', function(req,res) {
     }else{
       // Find the user based on the id
       var userId = response.id;
+      console.log(userId);
         Message.find({to:userId}, function(err, messages){
         if(err){
           console.log(err);
