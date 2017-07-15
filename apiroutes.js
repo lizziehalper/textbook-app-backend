@@ -27,14 +27,36 @@ router.post('/login', function(req,res) {
   // access facebook to get relevant info to create a new user
   FB.setAccessToken(token);
   console.log(token);
-  FB.api('4', { fields: ['id', 'name'] }, function (res) {
-    if(!res || res.error) {
-      console.log(!res ? 'error occurred' : res.error);
+  FB.api('/me', { fields: ['id', 'first_name', 'last_name', 'friends', 'picture'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
       return;
+    }else{
+      var userId = response.id;
+      var fname = response.first_name;
+      var lname = response.last_name;
+      var friendList = response.friends;
+      var prof = response.picture;
+      // create new user
+      var newUser = new User({
+        fname: fname,
+        lname: lname,
+        friends: friendList,
+        prof: prof,
+        userId: userId
+      })
+    // save the user on our DB with completed user data
+      newUser.save(function(err, savedUser){
+        if(err){
+          res.json({failure: 'failed to save new user'})
+        }else{
+          res.json({success: true})
+          console.log('saved the new user!!')
+        }
+      })
     }
-    console.log(res.id);
-    console.log(res.name);
   });
+})
 
   // request(`https://graph.facebook.com/me?access_token=${token}`, function (error, response) {
   //   if(error){
@@ -64,7 +86,6 @@ router.post('/login', function(req,res) {
   // });
 // create new user
 
-})
 
 // GET login
 router.get('/login', function(req,res){
