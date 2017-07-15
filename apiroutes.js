@@ -93,18 +93,20 @@ router.post('/registration', function(req,res) {
         }else{
           foundUser.age = DOB;
           userResponses.forEach(function(flag){
-              console.log(foundUser.flags);
+            console.log("foundUser", foundUser);
+            console.log("foundUser.flags", foundUser.flags);
+            res.json({success: true})
             // foundUser.flags.push(flag);
           })
-          foundUser.save(function(err, updatedUser){
-            if(err){
-              res.json({failure: 'failed to save new user'})
-            }else{
-              res.json({success: true})
-              // res.redirect('/api/feed')
-              console.log('saved the updated user with flags and DOB!!')
-            }
-          })
+          // foundUser.save(function(err, updatedUser){
+          //   if(err){
+          //     res.json({failure: 'failed to save new user'})
+          //   }else{
+          //     res.json({success: true})
+          //     // res.redirect('/api/feed')
+          //     console.log('saved the updated user with flags and DOB!!')
+          //   }
+          // })
         }
       })
     }
