@@ -130,14 +130,19 @@ router.get('/feed', function(req,res) {
         if(err){
           res.json({failure: "Could not find users"})
         }else{
-          // we want to create a "new" filtered version of users based on mutual friends
-          // var filteredPosts = [];
+          // -----FILTER USERS BY MUTUAL FRIENDS/DISTANCE HERE----
+
           res.json({success: true, response: users})
         }
       })
     }
   })
 })
+// POST: FEED VIEW
+router.post('/feed', function(req,res) {
+    res.send('The registration view!')
+})
+
 // POST: FEED VIEW: render all the users, filtered by mutual friends / distance
 // router.post('/feed', function(req,res) {
 //   FB.api('/me', { fields: ['id','friends'] }, function (res) {
