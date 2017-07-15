@@ -11,7 +11,7 @@ var Message = models.Message;
 
 // ROUTES:
 router.get('/', function(req,res){
-  res.redirect('/login');
+  res.send({success: true})
 })
 
 // LOGIN SCREEN-->
@@ -53,7 +53,8 @@ router.post('/login', function(req,res) {
 
 // REGISTRATION VIEW:
 router.get('/registration', function(req,res) {
-  res.json({message: 'hello'})
+  var token = req.query.token;
+
 })
 router.post('/registration', function(req,res) {
   res.json({message: 'hello'})
@@ -93,35 +94,35 @@ router.post('/messages/:user_id', function(req,res) {
 //   })
 // })
 //
-// router.get('/posts', function(req,res){
-//   // This request requires authentication -> retrieve and store the token
-//   var token = req.query.token;
-//   // once authenticated, we want to then retrieve the first 10 posts
-//   Token.findOne({token: token}, function(err, matchingToken){
-//     if(err){
-//       res.send(err)
-//     }else{
-//       // We want to look through all the posts --> use .find()
-//       Post.find(function(err, posts){
-//         if(err){
-//           res.json({failure: "Could not find posts"})
-//         }else{
-//           // we want to create a "new" filtered version of posts
-//           var filteredPosts = [];
-//           var i=0;
-//           while(i<posts.length || i<10){
-//             filteredPosts.push(posts[i])
-//             i++;
-//           }
-//           res.json({
-//             success: true,
-//             response: filteredPosts
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
+router.get('/posts', function(req,res){
+  // This request requires authentication -> retrieve and store the token
+  var token = req.query.token;
+  // once authenticated, we want to then retrieve the first 10 posts
+  Token.findOne({token: token}, function(err, matchingToken){
+    if(err){
+      res.send(err)
+    }else{
+      // We want to look through all the posts --> use .find()
+      Post.find(function(err, posts){
+        if(err){
+          res.json({failure: "Could not find posts"})
+        }else{
+          // we want to create a "new" filtered version of posts
+          var filteredPosts = [];
+          var i=0;
+          while(i<posts.length || i<10){
+            filteredPosts.push(posts[i])
+            i++;
+          }
+          res.json({
+            success: true,
+            response: filteredPosts
+          })
+        }
+      })
+    }
+  })
+})
 //
 // router.get('/posts/:page', function(req,res){
 //   var page = req.params.page;
