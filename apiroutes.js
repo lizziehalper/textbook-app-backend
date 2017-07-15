@@ -87,7 +87,7 @@ router.post('/registration', function(req,res) {
       var DOB = req.body.DOB;
       var userId = response.id
       // create new user
-      User.findByIdAndUpdate({userId: userId},{age:DOB, flags:userResponses}, function(err, foundUser){
+      User.findOneAndUpdate({userId: userId},{age:DOB, flags:userResponses}, function(err, foundUser){
         if(err){
           res.json({failure: 'Could not find user'})
         }else{
