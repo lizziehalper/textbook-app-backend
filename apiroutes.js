@@ -124,6 +124,7 @@ router.post('/feed', function(req,res) {
           // -----FILTER USERS BY MUTUAL FRIENDS/DISTANCE HERE----
           console.log('saved the FEEED!')
           res.json({success: true, response: foundUser.friends.data})
+          console.log(foundUser);
         }
       })
     }
