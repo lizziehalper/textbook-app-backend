@@ -92,21 +92,17 @@ router.post('/registration', function(req,res) {
           res.json({failure: 'Could not find user'})
         }else{
           foundUser.age = DOB;
-          userResponses.forEach(function(flag){
-            console.log("foundUser", foundUser);
-            console.log("foundUser.flags", foundUser.flags);
-            res.json({success: true, response: 'hello'})
-            // foundUser.flags.push(flag);
+          foundUser.flags = userResponses;
+
+          foundUser.save(function(err, updatedUser){
+            if(err){
+              res.json({failure: 'failed to save new user'})
+            }else{
+              res.json({success: true})
+              // res.redirect('/api/feed')
+              console.log('saved the updated user with flags and DOB!!')
+            }
           })
-          // foundUser.save(function(err, updatedUser){
-          //   if(err){
-          //     res.json({failure: 'failed to save new user'})
-          //   }else{
-          //     res.json({success: true})
-          //     // res.redirect('/api/feed')
-          //     console.log('saved the updated user with flags and DOB!!')
-          //   }
-          // })
         }
       })
     }
