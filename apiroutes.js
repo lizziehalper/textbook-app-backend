@@ -95,7 +95,7 @@ router.post('/registration', function(req,res) {
           userResponses.forEach(function(flag){
             console.log("foundUser", foundUser);
             console.log("foundUser.flags", foundUser.flags);
-            res.json({success: true})
+            res.json({success: true, response: 'hello'})
             // foundUser.flags.push(flag);
           })
           // foundUser.save(function(err, updatedUser){
