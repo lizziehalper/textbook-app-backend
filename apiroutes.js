@@ -262,6 +262,7 @@ router.post('/messages', function(req,res) {
           res.json({failure: "Could not find messages"})
         }else{
           var userMessages = foundUser.messages;
+          console.log(userMessages);
           res.json({
             success: true,
             response: userMessages
