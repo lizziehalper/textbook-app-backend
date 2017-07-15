@@ -17,7 +17,7 @@ router.get('/', function(req,res){
 // LOGIN SCREEN-->
 router.post('/login', function(req,res) {
   // store the passed in user input
-  var token = req.body.token
+  var token = req.body.token;
 
   // access facebook to get relevant info to create a new user
   var request = require('request');
@@ -44,6 +44,7 @@ router.post('/login', function(req,res) {
     if(err){
       res.json({failure: 'failed to save new user'})
     }else{
+      res.json({success: true})
       console.log('saved the new user!!')
     }
   })
