@@ -16,11 +16,13 @@ var userSchema = new Schema({
   flags: Array,
   age: Date
 })
-// TOKEN SCHEMA: userId, token, createdAt
-var tokenSchema = new Schema({
-  userId: String,
-  token: String,
-  createdAt: Date
+// STRANGER SCHEMA: 
+var strangerSchema = new Schema({
+  fname: String,
+  lname: String,
+  distance: Number,
+  commonFlags: Array,
+  mutualFriends: Number
 })
 // MESSAGE SCHEMA: sent messages, receieved messages, sent time stamp, received time stamp
 var messageSchema = new Schema({
@@ -32,12 +34,12 @@ var messageSchema = new Schema({
 // Models: pass the schema as an argument after building schema
 
 var User = mongoose.model('User', userSchema);
-var Token = mongoose.model('Token', tokenSchema);
+var Stranger = mongoose.model('Stranger', strangerSchema);
 var Message = mongoose.model('Message', messageSchema);
 
 
 module.exports = {
   User: User,
-  Token: Token,
+  Stranger: Stranger,
   Message: Message
 }
