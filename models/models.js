@@ -11,8 +11,7 @@ var userSchema = new Schema({
   fname: String,
   lname: String,
   friends: Array,
-  prof: Object,
-  userId: String
+  prof: Object
 })
 // TOKEN SCHEMA: userId, token, createdAt
 var tokenSchema = new Schema({

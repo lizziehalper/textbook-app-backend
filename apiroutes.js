@@ -25,6 +25,7 @@ router.post('/login', function(req,res) {
     if(err){
       res.send('failure: Could not fetch data', err)
     }else{
+      console.log(response);
       var fname = response.user.first_name;
       var lname = response.user.last_name;
       var friendList = response.user.friends;
@@ -36,8 +37,7 @@ router.post('/login', function(req,res) {
     fname: fname,
     lname: lname,
     friends: friendList,
-    prof: prof,
-    userId: userId
+    prof: prof
   })
 // save the user on our DB with completed user data
   newUser.save(function(err, savedUser){
