@@ -107,16 +107,16 @@ router.post('/feed', function(req,res) {
 
   // access facebook to get relevant info to create a new user
   FB.setAccessToken(token);
-  FB.api('/me', { fields: ['id','friends'] }, function (res) {
-    if(!res || res.error) {
-      console.log(!res ? 'error occurred' : res.error);
+  FB.api('/me', { fields: ['id','friends'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
       return;
     }else{
       // Find the user based on the id
       // grab all the flags that are toggled on
       // search all users with those same flags and sort them according to same friends
-      var userId = res.id
-      var userFriends = res.friends
+      var userId = response.id
+      var userFriends = response.friends
       User.find(function(err, users){
         if(err){
           res.json({failure: "Could not find users"})
