@@ -93,7 +93,8 @@ router.post('/registration', function(req,res) {
         }else{
           foundUser.age = DOB;
           userResponses.forEach(function(flag){
-            foundUser.flags.push(flag);
+              console.log(foundUser.flags);
+            // foundUser.flags.push(flag);
           })
           foundUser.save(function(err, updatedUser){
             if(err){
