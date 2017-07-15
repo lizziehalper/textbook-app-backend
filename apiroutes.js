@@ -250,27 +250,27 @@ router.get('/settings', function(req,res) {
 // })
 
 // MESSAGES VIEW: INBOX VIEW,
-router.get('/messages', function(req,res) {
-  var token = req.body.token;
-
-  // access facebook to get relevant info to create a new user
-  FB.setAccessToken(token);
-  FB.api('/me', { fields: ['id','friends'] }, function (res) {
-    if(!res || res.error) {
-      console.log(!res ? 'error occurred' : res.error);
-      return;
-    }else{
-      // Find the user based on the id
-      var userId = res.id;
-      Message.find(function(err, messages){
-        if(err){
-          res.json({failure: "Could not find messages"})
-        }else{
-          res.json({
-            success: true,
-            response: messages
-          })
-})
+// router.get('/messages', function(req,res) {
+//   var token = req.body.token;
+//
+//   // access facebook to get relevant info to create a new user
+//   FB.setAccessToken(token);
+//   FB.api('/me', { fields: ['id','friends'] }, function (res) {
+//     if(!res || res.error) {
+//       console.log(!res ? 'error occurred' : res.error);
+//       return;
+//     }else{
+//       // Find the user based on the id
+//       var userId = res.id;
+//       Message.find(function(err, messages){
+//         if(err){
+//           res.json({failure: "Could not find messages"})
+//         }else{
+//           res.json({
+//             success: true,
+//             response: messages
+//           })
+// })
 // GET --- MESSAGES VIEW:DIRECT MESSAGE VIEW
 router.get('/messages/:user_id', function(req,res) {
   res.json({message: 'hello'})
