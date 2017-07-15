@@ -27,8 +27,8 @@ var strangerSchema = new Schema({
 })
 // MESSAGE SCHEMA: sent messages, receieved messages, sent time stamp, received time stamp
 var messageSchema = new Schema({
-  from: Schema.Types.ObjectId,
-  to: Schema.Types.ObjectId,
+  from: String,
+  to: String,
   content: String,
   fromName: String,
   toName: String
