@@ -277,7 +277,7 @@ router.get('/messages', function(req,res) {
 // GET --- MESSAGES VIEW:DIRECT MESSAGE VIEW
 router.get('/messages/:user_id', function(req,res) {
   var token = req.body.token;
-  var messageTo = req.params.user_id;
+  var otherUser = req.params.user_id;
 
   // access facebook to get relevant info to create a new user
   FB.setAccessToken(token);
@@ -292,309 +292,64 @@ router.get('/messages/:user_id', function(req,res) {
         var myMessages = foundUser.messages;
         var messagesToRender = [];
         myMessages.forEach(function(message){
-          if(message.to===messageTo || message.from===messageTo){
+          if(message.to===otherUser || message.from===otherUser){
             messagesToRender.push(message);
           }
         })
         if(err){
           res.json({failure: "Could not find messages"})
         }else{
-          res.json({success: messagesToRender})
+          res.json({success:true, response: messagesToRender})
         }
       })
     }
   })
 })
 // POST --- MESSAGES VIEW:DIRECT MESSAGE VIEW
-// router.post('/messages/:user_id', function(req,res) {
-//   var token = req.body.token;
-//   var messageTo = req.params.user_id;
-//
-//   var messageContent = req.body.content;
-//   var messageSender = req.body.from;
-//   var messageReceiver = req.body.to;
-//
-//   // access facebook to get relevant info to create a new user
-//   FB.setAccessToken(token);
-//
-//   FB.api('/me', { fields: ['id'] }, function (response) {
-//     if(!response || response.error) {
-//       console.log(!response ? 'error occurred' : response.error);
-//       return;
-//     }else{
-//       User.findById({userId:userId}, function(err, foundUser){
-//         var myMessages = foundUser.messages;
-//
-//         var newMessage = new Message({
-//           from: messageSender,
-//           to: messageReceiver,
-//           content: messageContent
-//         });
-//         newMessage.save(function(err, savedMessage) {
-//           if(err){
-//             res.json({failure: "Could not make new message"})
-//           }else{
-//             myMessages.push(savedMessage);
-//             foundUser.save();
-//           }
-//         })
-//
-//
-//
-//       // alter the user object with the updates messages
-// })
-//
+router.post('/messages/:user_id', function(req,res) {
+  var token = req.body.token;
+  var otherUser = req.params.user_id;
+  var userId = res.id;
 
+  var messageContent = req.body.content;
+  var messageSender = req.body.from;
+  var messageReceiver = req.body.to;
 
+  // access facebook to get relevant info to create a new user
+  FB.setAccessToken(token);
+
+  FB.api('/me', { fields: ['id'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
+      return;
+    }else{
+      User.findById({userId:userId}, function(err, foundUser){
+        var myMessages = foundUser.messages;
+
+        var newMessage = new Message({
+          from: messageSender,
+          to: messageReceiver,
+          content: messageContent
+        });
+        newMessage.save(function(err, savedMessage) {
+          if(err){
+            res.json({failure: "Could not make new message"})
+          }else{
+            myMessages.push(savedMessage);
+            foundUser.save(function(err, updatedUser){
+              if(err){
+                res.json({failure: 'Could not POST DM message'})
+              }else{
+                res.json({success: 'Saved POST DM message!', response: foundUser})
+              }
+            })
+          }
+        })
+      })
+    }
+  })
+})
 //
-// router.get('/users/logout', function(req,res) {
-//   var token = req.query.token;
-//
-//   Token.remove({token:token}, function(err){
-//     if(err){
-//       res.json({failure: 'Could not remove token'})
-//     }else{
-//       res.json({
-//         success: true
-//       })
-//     }
-//   })
-// })
-//
-// router.get('/posts', function(req,res){
-//   // This request requires authentication -> retrieve and store the token
-//   var token = req.query.token;
-//   // once authenticated, we want to then retrieve the first 10 posts
-//   Token.findOne({token: token}, function(err, matchingToken){
-//     if(err){
-//       res.send(err)
-//     }else{
-//       // We want to look through all the posts --> use .find()
-//       Post.find(function(err, posts){
-//         if(err){
-//           res.json({failure: "Could not find posts"})
-//         }else{
-//           // we want to create a "new" filtered version of posts
-//           var filteredPosts = [];
-//           var i=0;
-//           while(i<posts.length || i<10){
-//             filteredPosts.push(posts[i])
-//             i++;
-//           }
-//           res.json({
-//             success: true,
-//             response: filteredPosts
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
-//
-// router.get('/posts/:page', function(req,res){
-//   var page = req.params.page;
-//   var token = req.query.token;
-//
-//   // Same process as page=1, but modify the while loop to be inside a for loop
-//   Token.findOne({token: token}, function(err, matchingToken){
-//     if(err){
-//       res.send(err)
-//     }else{
-//       // We want to look through all the posts --> use .find()
-//       Post.find(function(err, posts){
-//         if(err){
-//           res.json({failure: "Could not find posts"})
-//         }else{
-//           // we want to create a "new" filtered version of posts
-//           var filteredPosts = [];
-//           var i= (page-1) * 10;
-//
-//           while(i<posts.length || i<10*page){
-//               filteredPosts.push(posts[i]);
-//               i++;
-//             }
-//           res.json({
-//             success: true,
-//             response: filteredPosts
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
-//
-// router.post('/posts', function(req,res){
-//   // requires authentication -> retrieve token
-//   var token = req.query.token;
-//   Token.findOne({token:token}, function(err){
-//     if(err){
-//       res.json('Could not authenticate')
-//     }else{
-//       //we somehow need to be able to grab the name and id of the user
-//       // Look through all the users, matching the one wih an id= token.userId
-//       User.findOne({_id: token.userId}, function(err, foundUser){
-//         if(err){
-//           res.json({Failure: 'Could not find User'})
-//         }else{
-//           var userName = foundUser.fname +" "+ foundUser.lname;
-//           var userId = foundUser.id;
-//
-//           var newPost = new Post({
-//             poster: {
-//               name: userName,
-//               id: userId
-//             },
-//             content: req.body.content,
-//             likes: [],
-//             comments: [],
-//             createdAt: new Date()
-//           })
-//           newPost.save(function(err, savedPost){
-//             if(err){
-//               res.json({failure: 'Failed to post'})
-//             }else{
-//               res.json({success: savedPost})
-//             }
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
-//
-// router.get('posts/comments/:post_id', function(req,res){
-//   var token = req.query.token;
-//   var postId= req.params.post_id;
-//
-//   Token.findOne({token:token}, function(err){
-//     if(err){
-//       res.json({failure: "Could not authenticate user"})
-//     }else{
-//       // In order to retrieve the comments of a specific post,
-//       // we need to look up the post based on the post_id
-//       Post.findBy({_id: postId}, function(err, foundPost){
-//         if(err){
-//           res.json({failure: 'Could not find specified post'})
-//         }else{
-//           var comments = foundPost.comments;
-//
-//           res.json({
-//             success: true,
-//             response: comments
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
-//
-// router.post('posts/comments/:post_id', function(req,res){
-//   var token = req.query.token;
-//   var postId = req.params.post_id;
-//
-//   Token.findOne({token:token}, function(err){
-//     if(err){
-//       res.json({failure: "Failed to authenticate"})
-//     }else{
-//       User.findBy({_id: token.userId}, function(err, foundUser){
-//         if(err){
-//           res.json({failure: "Could not find user"})
-//         }else{
-//           // We will need the userId and userName for the poster component of the new comment
-//           var userId= foundUser.id;
-//           var userName = foundUser.fname + " "+ foundUser.lname;
-//
-//           Post.findBy({_id: postId}, function(err, foundPost){
-//             if(err){
-//               res.json({failure: "Failed to find specified post"})
-//             }else{
-//               // Once we have the post, we want to access the comments
-//               var comments = foundPost.comments;
-//               // Then create a comment to then add on to the existing Array
-//               var newComment = {
-//                 createdAt:new Date(),
-//                 content: req.body.content,
-//                 poster: {
-//                   // need the name of the user
-//                   name: userName,
-//                   id: userId
-//                 }
-//               }
-//               newComment.save(function(err, savedComment){
-//                 if(err){
-//                   res.json({failure: "Could not save comment"})
-//                 }else{
-//                   comments.push(savedComment);
-//                   res.json({
-//                     success: true,
-//                     response: comments
-//                   })
-//                 }
-//               })
-//             }
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
-// router.get('posts/likes/:post_id', function(req,res){
-//   var token = req.query.token;
-//   var postId = req.params.post_id;
-//   var hasLiked = false;
-//   Token.findOne({token:token}, function(err){
-//     if(err){
-//       res.json({failure: "Could not authenticate"})
-//     }else{
-//       User.findBy({_id: token.userId}, function(err, foundUser){
-//         if(err){
-//           res.json({failure: "Could not find given user"})
-//         }else{
-//           var userId = foundUser.id;
-//           var userName = foundUser.fname+ " "+ foundUser.lname;
-//
-//           Post.findBy({_id: postId}, function(err, foundPost){
-//             if(err){
-//               res.json({failure: 'Could not find given post'})
-//             }else{
-//               var likes = foundPost.likes;
-//               var likeIndex = 0;
-//               // check if this post has already been liked
-//               // if yes, we will need to toggle it and remove it from the likes array
-//               likes.forEach(function(like, index){
-//                 if(like.id === userId){
-//                   hasLiked = true;
-//                   likeIndex = index;
-//                 }
-//               })
-//               if(!hasLiked){
-//                 hasLiked = true;
-//                 var newLike = {
-//                   name: userName,
-//                   id: userId
-//                 }
-//                 likes.push(newLike);
-//               }else{
-//                 likes.splice(likeIndex, 1);
-//               }
-//               // we need to save the updated post object, and send it as a response to the get request
-//               foundPost.save(function(err, savedPost) {
-//                 if(err){
-//                   res.json({failure: "Could not save the updated post"})
-//                 }else{
-//                   res.json({
-//                     success: true,
-//                     response: foundPost
-//                   })
-//                 }
-//               })
-//             }
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
 //
 
 

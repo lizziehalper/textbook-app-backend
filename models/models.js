@@ -27,9 +27,9 @@ var strangerSchema = new Schema({
 })
 // MESSAGE SCHEMA: sent messages, receieved messages, sent time stamp, received time stamp
 var messageSchema = new Schema({
-  sent: Array,
-  received: Array,
-  createdAt: Date,
+  from: Schema.Types.ObjectId,
+  to: Schema.Types.ObjectId,
+  content: String
 
 })
 // Models: pass the schema as an argument after building schema
