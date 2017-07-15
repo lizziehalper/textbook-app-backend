@@ -117,7 +117,7 @@ router.post('/feed', function(req,res) {
       // search all users with those same flags and sort them according to same friends
       var userId = response.id
       var userFriends = response.friends
-      User.findById({userId:userId}, function(err, foundUser){
+      User.findBy({userId: userId}, function(err, foundUser){
         if(err){
           res.json({failure: "Could not find users"})
         }else{
