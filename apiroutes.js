@@ -244,7 +244,7 @@ router.get('/settings', function(req,res) {
 // })
 
 // MESSAGES VIEW: INBOX VIEW
-router.post('/messages', function(req,res) {
+router.get('/messages', function(req,res) {
   var token = req.body.token;
 
   // access facebook to get relevant info to create a new user
@@ -305,22 +305,22 @@ router.get('/messages/:user_id', function(req,res) {
   })
 })
 // POST --- MESSAGES VIEW:DIRECT MESSAGE VIEW
-router.post('/messages/:user_id', function(req,res) {
-  var token = req.body.token;
-  var messageTo = req.params.user_id;
-
-  // access facebook to get relevant info to create a new user
-  FB.setAccessToken(token);
-
-  FB.api('/me', { fields: ['id'] }, function (response) {
-    if(!response || response.error) {
-      console.log(!response ? 'error occurred' : response.error);
-      return;
-    }else{
-      var userResponses = req.body.flags;
-      var DOB = req.body.DOB;
-      var userId = response.idres.json({message: 'hello'})
-})
+// router.post('/messages/:user_id', function(req,res) {
+//   var token = req.body.token;
+//   var messageTo = req.params.user_id;
+//
+//   // access facebook to get relevant info to create a new user
+//   FB.setAccessToken(token);
+//
+//   FB.api('/me', { fields: ['id'] }, function (response) {
+//     if(!response || response.error) {
+//       console.log(!response ? 'error occurred' : response.error);
+//       return;
+//     }else{
+//       var userResponses = req.body.flags;
+//       var DOB = req.body.DOB;
+//       var userId = response.idres.json({message: 'hello'})
+// })
 //
 
 
