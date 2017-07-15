@@ -8,10 +8,10 @@ var User = models.User;
 var Token = models.Token;
 var Message = models.Message;
 
-console.log("please work!");
+
 // ROUTES:
 router.get('/', function(req,res){
-  res.send('it works!')
+  res.redirect('/login');
 })
 
 // LOGIN SCREEN-->
@@ -47,6 +47,11 @@ router.post('/login', function(req,res) {
       console.log('saved the new user!!')
     }
   })
+})
+
+// GET login
+router.get('/login', function(req,res){
+  console.log();
 })
 
 
