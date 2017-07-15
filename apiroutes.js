@@ -11,7 +11,7 @@ var Message = models.Message;
 
 // ROUTES:
 router.get('/', function(req,res){
-  res.send({success: true})
+  res.json({success: true})
 })
 
 // LOGIN SCREEN-->
