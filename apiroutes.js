@@ -1,15 +1,8 @@
-// IMPORT NECESSARY PACKAGES/FILES
 
-
-// Using require() in ES5
-var FB = require('fb');
-
-// Using require() in ES2015
-var {FB, FacebookApiException} = require('fb');
-
-// Using ES2015 import through Babel
 import FB from 'fb'; // or,
 import {FB, FacebookApiException} from 'fb';
+
+
 
 var express = require('express');
 var router = express.Router()
