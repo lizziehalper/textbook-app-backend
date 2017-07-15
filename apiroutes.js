@@ -117,13 +117,13 @@ router.post('/feed', function(req,res) {
       // search all users with those same flags and sort them according to same friends
       var userId = response.id
       var userFriends = response.friends
-      User.find(function(err, users){
+      User.findById({userId:userId}, function(err, foundUser){
         if(err){
           res.json({failure: "Could not find users"})
         }else{
           // -----FILTER USERS BY MUTUAL FRIENDS/DISTANCE HERE----
           console.log('saved the FEEED!')
-          res.json({success: true, response: users})
+          res.json({success: true, response: foundUser.friends.data})
         }
       })
     }
@@ -280,7 +280,7 @@ router.get('/messages/:user_id', function(req,res) {
 
   // access facebook to get relevant info to create a new user
   FB.setAccessToken(token);
-  FB.api('/me', { fields: ['id','friends'] }, function (res) {
+  FB.api('/me', { fields: ['id'] }, function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
       return;
@@ -305,22 +305,43 @@ router.get('/messages/:user_id', function(req,res) {
   })
 })
 // POST --- MESSAGES VIEW:DIRECT MESSAGE VIEW
-// router.post('/messages/:user_id', function(req,res) {
-//   var token = req.body.token;
-//   var messageTo = req.params.user_id;
-//
-//   // access facebook to get relevant info to create a new user
-//   FB.setAccessToken(token);
-//
-//   FB.api('/me', { fields: ['id'] }, function (response) {
-//     if(!response || response.error) {
-//       console.log(!response ? 'error occurred' : response.error);
-//       return;
-//     }else{
-//       var userResponses = req.body.flags;
-//       var DOB = req.body.DOB;
-//       var userId = response.idres.json({message: 'hello'})
-// })
+router.post('/messages/:user_id', function(req,res) {
+  var token = req.body.token;
+  var messageTo = req.params.user_id;
+
+  var messageContent = req.body.content;
+  var messageSender = req.body.from;
+  var messageReceiver = req.body.to;
+
+  // access facebook to get relevant info to create a new user
+  FB.setAccessToken(token);
+
+  FB.api('/me', { fields: ['id'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
+      return;
+    }else{
+      User.findById({userId:userId}, function(err, foundUser){
+        var myMessages = foundUser.messages;
+
+        var newMessage = new Message({
+          from: messageSender,
+          to: messageReceiver,
+          content: messageContent
+        });
+        newMessage.save(function(err, savedMessage) {
+          if(err){
+            res.json({failure: "Could not make new message"})
+          }else{
+            myMessages.push(savedMessage);
+            foundUser.save();
+          }
+        })
+
+
+
+      // alter the user object with the updates messages
+})
 //
 
 
