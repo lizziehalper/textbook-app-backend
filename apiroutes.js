@@ -245,7 +245,7 @@ router.get('/settings', function(req,res) {
 // })
 
 // MESSAGES VIEW: INBOX VIEW
-router.get('/messages', function(req,res) {
+router.post('/messages', function(req,res) {
   var token = req.body.token;
 
   // access facebook to get relevant info to create a new user
