@@ -260,6 +260,7 @@ router.post('/messages', function(req,res) {
       var userId = response.id;
         Message.find({to:userId}, function(err, messages){
         if(err){
+          console.log(err);
           res.json({failure: "Could not find messages"})
         }else{
           console.log(messages);
