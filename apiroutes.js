@@ -73,6 +73,11 @@ router.get('/registration', function(req,res) {
 })
 // POST: REGISTRATION VIEW
 router.post('/registration', function(req,res) {
+  var token = req.body.token;
+
+  // access facebook to get relevant info to create a new user
+  FB.setAccessToken(token);
+
   FB.api('/me', { fields: ['id'] }, function (response) {
     if(!response || response.error) {
       console.log(!response ? 'error occurred' : response.error);
@@ -107,6 +112,10 @@ router.post('/registration', function(req,res) {
 
 // GET: FEED VIEW
 router.get('/feed', function(req,res) {
+  var token = req.body.token;
+
+  // access facebook to get relevant info to create a new user
+  FB.setAccessToken(token);
   FB.api('/me', { fields: ['id','friends'] }, function (res) {
     if(!res || res.error) {
       console.log(!res ? 'error occurred' : res.error);
