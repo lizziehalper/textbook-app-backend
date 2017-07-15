@@ -86,10 +86,10 @@ router.post('/registration', function(req,res) {
     }else{
       var userResponses = req.body.flags;
       var DOB = req.body.DOB;
-      var age = Date.now() - DOB;
+      // var age = Date.now() - DOB;
       var userId = response.id
       // create new user
-      User.findOneAndUpdate({userId: userId},{age:age, flags:userResponses}, function(err, foundUser){
+      User.findOneAndUpdate({userId: userId},{age:DOB, flags:userResponses}, function(err, foundUser){
         if(err){
           res.json({failure: 'Could not find user'})
         }else{
