@@ -216,6 +216,9 @@ router.post('/settings', function(req,res) {
       console.log(!response ? 'error occurred' : response.error);
       return;
     }else{
+      // FINISH
+    }
+  })
 })
 
 // MESSAGES VIEW: INBOX VIEW,
