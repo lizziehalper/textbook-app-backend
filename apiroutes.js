@@ -57,7 +57,6 @@ router.post('/login', function(req,res) {
         if(err){
           res.json({failure: 'failed to save new user'})
         }else{
-          res.json({success: true})
           res.redirect('/api/registration')
           console.log('saved the new user!!')
         }
@@ -90,12 +89,12 @@ router.post('/registration', function(req,res) {
           userResponses.forEach(function(flag){
             foundUser.flags.push(flag);
           })
-          foundUser.save(function(err, savedUser){
+          foundUser.save(function(err, updatedUser){
             if(err){
               res.json({failure: 'failed to save new user'})
             }else{
               res.json({success: true})
-              res.redirect('/api/feed')
+              // res.redirect('/api/feed')
               console.log('saved the updated user with flags and DOB!!')
             }
           })
