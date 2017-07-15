@@ -58,7 +58,7 @@ router.post('/login', function(req,res) {
           res.json({failure: 'failed to save new user'})
         }else{
           res.json({success: true})
-          res.redirect('/registration')
+          res.redirect('/api/registration')
           console.log('saved the new user!!')
         }
       })
@@ -95,7 +95,7 @@ router.post('/registration', function(req,res) {
               res.json({failure: 'failed to save new user'})
             }else{
               res.json({success: true})
-              res.redirect('/feed')
+              res.redirect('/api/feed')
               console.log('saved the updated user with flags and DOB!!')
             }
           })
@@ -107,8 +107,13 @@ router.post('/registration', function(req,res) {
 
 // GET: SETTINGS VIEW:
 router.get('/settings', function(req,res) {
-  res.json({message: 'hello'})
+
 })
+// POST: SETTINGS VIEW:
+router.post('/settings', function(req,res) {
+
+})
+
 // MESSAGES VIEW: INBOX VIEW,
 router.get('/messages', function(req,res) {
   res.json({message: 'hello'})
