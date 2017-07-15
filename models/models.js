@@ -15,7 +15,7 @@ var userSchema = new Schema({
   userId: String,
   flags: Array,
   age: Date,
-  messages: Object
+  messages: Array
 })
 // STRANGER SCHEMA:
 var strangerSchema = new Schema({
@@ -29,7 +29,9 @@ var strangerSchema = new Schema({
 var messageSchema = new Schema({
   from: Schema.Types.ObjectId,
   to: Schema.Types.ObjectId,
-  content: String
+  content: String,
+  fromName: String,
+  toName: String
 
 })
 // Models: pass the schema as an argument after building schema

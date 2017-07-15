@@ -86,9 +86,10 @@ router.post('/registration', function(req,res) {
     }else{
       var userResponses = req.body.flags;
       var DOB = req.body.DOB;
+      var age = Date.now() - DOB;
       var userId = response.id
       // create new user
-      User.findOneAndUpdate({userId: userId},{age:DOB, flags:userResponses}, function(err, foundUser){
+      User.findOneAndUpdate({userId: userId},{age:age, flags:userResponses}, function(err, foundUser){
         if(err){
           res.json({failure: 'Could not find user'})
         }else{
@@ -307,7 +308,7 @@ router.get('/messages/:user_id', function(req,res) {
 // POST --- MESSAGES VIEW:DIRECT MESSAGE VIEW
 router.post('/messages/:user_id', function(req,res) {
   var token = req.body.token;
-  var otherUser = req.params.user_id;
+  var otherUserId = req.params.user_id;
   var userId = res.id;
 
   var messageContent = req.body.content;
@@ -323,27 +324,43 @@ router.post('/messages/:user_id', function(req,res) {
       return;
     }else{
       User.findById({userId:userId}, function(err, foundUser){
-        var myMessages = foundUser.messages;
+        if(err){
+          res.json({failure: 'Could not find our user'})
+        }else{
 
-        var newMessage = new Message({
-          from: messageSender,
-          to: messageReceiver,
-          content: messageContent
-        });
-        newMessage.save(function(err, savedMessage) {
-          if(err){
-            res.json({failure: "Could not make new message"})
-          }else{
-            myMessages.push(savedMessage);
-            foundUser.save(function(err, updatedUser){
-              if(err){
-                res.json({failure: 'Could not POST DM message'})
-              }else{
-                res.json({success: 'Saved POST DM message!', response: foundUser})
-              }
-            })
-          }
-        })
+          var myMessages = foundUser.messages;
+          var fromName = foundUser.fname;
+
+          User.findById({userId:otherUserId}, function(err, otherUser){
+            if(err){
+              res.json({failure: 'Could not find the other user'})
+            }else{
+              var toName = otherUser.fname;
+
+              var newMessage = new Message({
+                from: messageSender,
+                to: messageReceiver,
+                content: messageContent,
+                fromName: fromName,
+                toName:toName
+              });
+              newMessage.save(function(err, savedMessage) {
+                if(err){
+                  res.json({failure: "Could not make new message"})
+                }else{
+                  myMessages.push(savedMessage);
+                  foundUser.save(function(err, updatedUser){
+                    if(err){
+                      res.json({failure: 'Could not POST DM message'})
+                    }else{
+                      res.json({success: 'Saved POST DM message!', response: foundUser})
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
       })
     }
   })
