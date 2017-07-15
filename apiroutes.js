@@ -102,7 +102,7 @@ router.post('/registration', function(req,res) {
 })
 
 // GET: FEED VIEW
-router.get('/feed', function(req,res) {
+router.post('/feed', function(req,res) {
   var token = req.body.token;
 
   // access facebook to get relevant info to create a new user
@@ -130,7 +130,7 @@ router.get('/feed', function(req,res) {
   })
 })
 // POST: FEED VIEW
-router.post('/feed', function(req,res) {
+router.get('/feed', function(req,res) {
     res.send('The FEED view!')
 })
 
