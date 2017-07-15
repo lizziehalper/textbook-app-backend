@@ -19,7 +19,12 @@ router.get('/', function(req,res){
   res.redirect('/api/login');
 })
 
-// LOGIN SCREEN-->
+// GET: LOGIN
+router.get('/login', function(req,res){
+  console.log();
+})
+
+// POST: LOGIN SCREEN-->
 router.post('/login', function(req,res) {
   // store the passed in user input
   var token = req.body.token;
@@ -43,7 +48,9 @@ router.post('/login', function(req,res) {
         lname: lname,
         friends: friendList,
         prof: prof,
-        userId: userId
+        userId: userId,
+        flags: [],
+        age: null
       })
     // save the user on our DB with completed user data
       newUser.save(function(err, savedUser){
@@ -51,6 +58,7 @@ router.post('/login', function(req,res) {
           res.json({failure: 'failed to save new user'})
         }else{
           res.json({success: true})
+          res.redirect('/registration')
           console.log('saved the new user!!')
         }
       })
@@ -58,52 +66,46 @@ router.post('/login', function(req,res) {
   });
 })
 
-  // request(`https://graph.facebook.com/me?access_token=${token}`, function (error, response) {
-  //   if(error){
-  //     res.send('failure: Could not fetch data', error)
-  //   }else{
-  //     console.log(response);
-  //     var fname = response.user.first_name;
-  //     var lname = response.user.last_name;
-  //     var friendList = response.user.friends;
-  //     var prof = response.user.picture;
-  //     var newUser = new User({
-  //       fname: fname,
-  //       lname: lname,
-  //       friends: friendList,
-  //       prof: prof
-  //     })
-  //   // save the user on our DB with completed user data
-  //     newUser.save(function(err, savedUser){
-  //       if(err){
-  //         res.json({failure: 'failed to save new user'})
-  //       }else{
-  //         res.json({success: true})
-  //         console.log('saved the new user!!')
-  //       }
-  //     })
-  //   }
-  // });
-// create new user
 
-
-// GET login
-router.get('/login', function(req,res){
-  console.log();
-})
-
-
-
-// REGISTRATION VIEW:
+// GET: REGISTRATION VIEW:
 router.get('/registration', function(req,res) {
-  var token = req.query.token;
-
+  res.send('The registration view!')
 })
+// POST: REGISTRATION VIEW
 router.post('/registration', function(req,res) {
-  res.json({message: 'hello'})
+  FB.api('/me', { fields: ['id'] }, function (response) {
+    if(!response || response.error) {
+      console.log(!response ? 'error occurred' : response.error);
+      return;
+    }else{
+      var userResponses = req.body.flags;
+      var DOB = req.body.DOB;
+      var userId = response.id
+      // create new user
+      User.findBy({userId: userId}, function(err, foundUser){
+        if(err){
+          res.json({failure: 'Could not find user'})
+        }else{
+          foundUser.age = DOB;
+          userResponses.forEach(function(flag){
+            foundUser.flags.push(flag);
+          })
+          foundUser.save(function(err, savedUser){
+            if(err){
+              res.json({failure: 'failed to save new user'})
+            }else{
+              res.json({success: true})
+              res.redirect('/feed')
+              console.log('saved the updated user with flags and DOB!!')
+            }
+          })
+        }
+      })
+    }
+  })
 })
 
-// SETTINGS VIEW:
+// GET: SETTINGS VIEW:
 router.get('/settings', function(req,res) {
   res.json({message: 'hello'})
 })
@@ -137,35 +139,35 @@ router.post('/messages/:user_id', function(req,res) {
 //   })
 // })
 //
-router.get('/posts', function(req,res){
-  // This request requires authentication -> retrieve and store the token
-  var token = req.query.token;
-  // once authenticated, we want to then retrieve the first 10 posts
-  Token.findOne({token: token}, function(err, matchingToken){
-    if(err){
-      res.send(err)
-    }else{
-      // We want to look through all the posts --> use .find()
-      Post.find(function(err, posts){
-        if(err){
-          res.json({failure: "Could not find posts"})
-        }else{
-          // we want to create a "new" filtered version of posts
-          var filteredPosts = [];
-          var i=0;
-          while(i<posts.length || i<10){
-            filteredPosts.push(posts[i])
-            i++;
-          }
-          res.json({
-            success: true,
-            response: filteredPosts
-          })
-        }
-      })
-    }
-  })
-})
+// router.get('/posts', function(req,res){
+//   // This request requires authentication -> retrieve and store the token
+//   var token = req.query.token;
+//   // once authenticated, we want to then retrieve the first 10 posts
+//   Token.findOne({token: token}, function(err, matchingToken){
+//     if(err){
+//       res.send(err)
+//     }else{
+//       // We want to look through all the posts --> use .find()
+//       Post.find(function(err, posts){
+//         if(err){
+//           res.json({failure: "Could not find posts"})
+//         }else{
+//           // we want to create a "new" filtered version of posts
+//           var filteredPosts = [];
+//           var i=0;
+//           while(i<posts.length || i<10){
+//             filteredPosts.push(posts[i])
+//             i++;
+//           }
+//           res.json({
+//             success: true,
+//             response: filteredPosts
+//           })
+//         }
+//       })
+//     }
+//   })
+// })
 //
 // router.get('/posts/:page', function(req,res){
 //   var page = req.params.page;

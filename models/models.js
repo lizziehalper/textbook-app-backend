@@ -12,7 +12,9 @@ var userSchema = new Schema({
   lname: String,
   friends: Array,
   prof: Object,
-  userId: String
+  userId: String,
+  flags: Array,
+  age: Date
 })
 // TOKEN SCHEMA: userId, token, createdAt
 var tokenSchema = new Schema({
