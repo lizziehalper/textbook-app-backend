@@ -1,4 +1,16 @@
 // IMPORT NECESSARY PACKAGES/FILES
+
+
+// Using require() in ES5
+var FB = require('fb');
+
+// Using require() in ES2015
+var {FB, FacebookApiException} = require('fb');
+
+// Using ES2015 import through Babel
+import FB from 'fb'; // or,
+import {FB, FacebookApiException} from 'fb';
+
 var express = require('express');
 var router = express.Router()
 var models = require('./models/models.js');
@@ -20,33 +32,43 @@ router.post('/login', function(req,res) {
   var token = req.body.token;
 
   // access facebook to get relevant info to create a new user
-
-  request(`https://graph.facebook.com/me?access_token=${token}`, function (error, response) {
-    if(error){
-      res.send('failure: Could not fetch data', error)
-    }else{
-      console.log(response);
-      var fname = response.user.first_name;
-      var lname = response.user.last_name;
-      var friendList = response.user.friends;
-      var prof = response.user.picture;
-      var newUser = new User({
-        fname: fname,
-        lname: lname,
-        friends: friendList,
-        prof: prof
-      })
-    // save the user on our DB with completed user data
-      newUser.save(function(err, savedUser){
-        if(err){
-          res.json({failure: 'failed to save new user'})
-        }else{
-          res.json({success: true})
-          console.log('saved the new user!!')
-        }
-      })
+  FB.setAccessToken(token);
+  console.log(token);
+  FB.api('4', { fields: ['id', 'name'] }, function (res) {
+    if(!res || res.error) {
+      console.log(!res ? 'error occurred' : res.error);
+      return;
     }
+    console.log(res.id);
+    console.log(res.name);
   });
+
+  // request(`https://graph.facebook.com/me?access_token=${token}`, function (error, response) {
+  //   if(error){
+  //     res.send('failure: Could not fetch data', error)
+  //   }else{
+  //     console.log(response);
+  //     var fname = response.user.first_name;
+  //     var lname = response.user.last_name;
+  //     var friendList = response.user.friends;
+  //     var prof = response.user.picture;
+  //     var newUser = new User({
+  //       fname: fname,
+  //       lname: lname,
+  //       friends: friendList,
+  //       prof: prof
+  //     })
+  //   // save the user on our DB with completed user data
+  //     newUser.save(function(err, savedUser){
+  //       if(err){
+  //         res.json({failure: 'failed to save new user'})
+  //       }else{
+  //         res.json({success: true})
+  //         console.log('saved the new user!!')
+  //       }
+  //     })
+  //   }
+  // });
 // create new user
 
 })
