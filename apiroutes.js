@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router()
 var models = require('./models/models.js');
-
+var request = require('request');
 // IMPORTING ALL MODELS
 var User = models.User;
 var Token = models.Token;
@@ -11,7 +11,7 @@ var Message = models.Message;
 
 // ROUTES:
 router.get('/', function(req,res){
-  res.redirect('/login');
+  res.redirect('/api/login');
 })
 
 // LOGIN SCREEN-->
@@ -20,7 +20,7 @@ router.post('/login', function(req,res) {
   var token = req.body.token;
 
   // access facebook to get relevant info to create a new user
-  var request = require('request');
+
   request(`https://graph.facebook.com/me?access_token=${token}`, function (error, response) {
     if(err){
       res.send('failure: Could not fetch data', err)
