@@ -22,8 +22,8 @@ router.post('/login', function(req,res) {
   // access facebook to get relevant info to create a new user
 
   request(`https://graph.facebook.com/me?access_token=${token}`, function (error, response) {
-    if(err){
-      res.send('failure: Could not fetch data', err)
+    if(error){
+      res.send('failure: Could not fetch data', error)
     }else{
       console.log(response);
       var fname = response.user.first_name;
