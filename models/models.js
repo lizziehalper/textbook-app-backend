@@ -1,48 +1,33 @@
-var mongoose = require('mongoose');
-var express = require('express');
-var bodyParser = require('body-parser');
-
-
+const mongoose = require('mongoose');
+// const bodyParser = require('body-parser');
 // Schemas: The outline of how every single document should look
-var Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-// USER SCHEMA: full name, friends list, default picture, userId
-var userSchema = new Schema({
+// USER SCHEMA
+const userSchema = new Schema({
   fname: String,
   lname: String,
-  friends: Array,
-  prof: Object,
-  userId: String,
-  flags: Array,
-  age: Date,
-  messages: Array
-})
-// STRANGER SCHEMA:
-var strangerSchema = new Schema({
-  fname: String,
-  lname: String,
-  distance: Number,
-  commonFlags: Array,
-  mutualFriends: Number
-})
-// MESSAGE SCHEMA: sent messages, receieved messages, sent time stamp, received time stamp
-var messageSchema = new Schema({
-  from: String,
-  to: String,
-  content: String,
-  fromName: String,
-  toName: String
+  username: String,
+  email: String,
+  hashedPassword: String,
+  library: [{ type: mongoose.Schema.ObjectId, ref: 'Book' }],
+});
 
-})
-// Models: pass the schema as an argument after building schema
+const bookSchema = new Schema({
+  title: String,
+  author: String,
+  date: Date,
+  decription: String,
+  image: String,
+  text: String,
+  genre: String,
+});
 
-var User = mongoose.model('User', userSchema);
-var Stranger = mongoose.model('Stranger', strangerSchema);
-var Message = mongoose.model('Message', messageSchema);
+//  Models: pass the schema as an argument after building schema
 
-
+const User = mongoose.model('User', userSchema);
+const Book = mongoose.model('Book', bookSchema);
 module.exports = {
-  User: User,
-  Stranger: Stranger,
-  Message: Message
-}
+  User,
+  Book,
+};

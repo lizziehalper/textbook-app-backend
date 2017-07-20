@@ -1,1 +1,1 @@
-export MONGODB_URI="mongodb://vanessa:vanessa@ds057386.mlab.com:57386/flag-app"
+export MONGODB_URI="mongodb://lizzie:password@ds019970.mlab.com:19970/textbook-app"
