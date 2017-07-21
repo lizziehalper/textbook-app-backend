@@ -47,7 +47,6 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
       library: req.user.library,
     },
   });
-  res.redirect(200, '/');
 });
 
 router.post('/register', (req, res) => {
@@ -84,10 +83,20 @@ router.post('/', (req, res) => {
   });
 });
 
-router.post('/explore', (req, res) => {
+router.get('/explore', (req, res) => {
   Book.find()
   .exec((err, books) => {
     res.json({ success: true, library: books });
+  });
+});
+
+router.post('/read', (req, res) => {
+  const bookId = req.body.id;
+  Book.findById(bookId, (err, book) => {
+    if (err) {
+      res.json({ failure: 'failed to find book' });
+    }
+    res.json({ success: true, text: book });
   });
 });
 
