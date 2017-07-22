@@ -9,11 +9,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-
+const expressJWT = require('express-jwt');
+const jwt = require('jsonwebtoken');
 // Express set up
 const app = express();
 app.use(bodyParser.json());
 
+
+app.use(bodyParser.urlencoded());
+app.use(expressJWT({ secret: 'secret' }).unless({ path: ['/login', '/register'] }));
+app.use(passport.initialize());
 // Mongoose configuration
 // When there is an error, run this function:
 mongoose.connection.on('error', () => {
@@ -26,19 +31,37 @@ mongoose.connection.on('connected', () => {
 
 mongoose.connect(process.env.MONGODB_URI);
 
+app.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+  const token = jwt.sign({ id: req.body.id }, 'secret');
+  res.json({
+    success: true,
+    user: {
+      id: req.user.id,
+      fname: req.user.fname,
+      lname: req.user.lname,
+      username: req.user.username,
+      email: req.user.email,
+      library: req.user.library,
+    },
+    token,
+  });
+});
+
 // session setup
-const session = require('express-session');
-
-const MongoStore = require('connect-mongo')(session);
-
-app.use(session({
-  secret: 'secret',
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection.on('connected', () => {
-      console.log('NEW SESSION');
-    }),
-  }),
-}));
+// const session = require('express-session');
+//
+// const MongoStore = require('connect-mongo')(session);
+//
+// app.use(session({
+//   secret: 'secret',
+//   store: new MongoStore({
+//     mongooseConnection: mongoose.connection.on('connected', () => {
+//       console.log('NEW SESSION');
+//     }),
+//   }),
+// }));
 
 // hashing
 const crypto = require('crypto');
@@ -63,33 +86,19 @@ passport.use(new LocalStrategy((username, password, done) => {
   });
 }));
 
-// passport.use(new LocalStrategy((username, password, done) => {
-//   User.findOne({ username }, (err, user) => {
-//     if (err) { return done(err); }
-//     if (!user) {
-//       return done(null, false, { message: 'Incorrect username.' });
-//     }
-//     if (!user.validPassword(password)) {
-//       return done(null, false, { message: 'Incorrect password.' });
-//     }
-//     return done(null, user);
-//   });
-// }));
-
 // PASSPORT SERIALIZE/DESERIALIZE USER HERE HERE
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(null, user);
-  });
-});
+// passport.serializeUser((user, done) => {
+//   done(null, user.id);
+// });
+//
+// passport.deserializeUser((id, done) => {
+//   User.findById(id, (err, user) => {
+//     done(null, user);
+//   });
+// });
 
 // PASSPORT MIDDLEWARE HERE
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 // require in my routes
 const apiroutes = require('./apiroutes');
