@@ -20,45 +20,54 @@ function hashPassword(password) {
 // ROUTES:
 
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   const isValidUser = (user) => {
     if (!user.fname) {
-      return 'Please enter your first name.';
+      return Promise.reject('Please enter your first name.');
     }
     if (!user.lname) {
-      return 'Please enter your last name.';
+      return Promise.reject('Please enter your last name.');
     }
     if (!isEmail(user.email)) {
-      return 'Please enter a valid email address.';
+      return Promise.reject('Please enter a valid email address.');
     }
     if (!user.username) {
-      return 'Please enter a username.';
+      return Promise.reject('Please enter a username.');
     }
     if (!user.hashedPassword) {
-      return 'Please enter a password.';
+      return Promise.reject('Please enter a password.');
     }
-    // User.find({ email: user.email })
-    // .exec((err, email) => {
-    //   if (err) {
-    //     return err;
-    //   }
-    //   if (email) {
-    //     return 'There is already an account associated with this email address.';
-    //   }
-    //   return true;
-    // });
-    return true;
+    return new Promise((resolve, reject) => {
+      User.findOne({ email: user.email }, (err, foundUser) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(foundUser);
+      });
+    });
   };
-  const newUser = new User({
+
+
+  const validUser = {
     fname: req.body.fname,
     lname: req.body.lname,
     username: req.body.username,
     email: req.body.email,
     hashedPassword: hashPassword(req.body.password),
     library: [],
-  });
-  if (isValidUser(newUser) === true) {
-    newUser.save((err) => {
+  };
+
+  console.log('validUser', validUser);
+
+  try {
+    const user = await isValidUser(validUser);
+    console.log('VALIDATE:', user);
+
+    if (user) {
+      res.json({ error: 'email taken' });
+      return;
+    }
+    new User(validUser).save((err, newUser) => {
       if (err) {
         res.json({ failure: 'failed to save new user' });
       } else {
@@ -67,7 +76,44 @@ router.post('/register', (req, res) => {
         console.log('saved the new user!!');
       }
     });
+  } catch (e) {
+    console.log(e);
+    res.json({ error: e });
   }
+
+  // const validate = user =>
+  //   Promise.resolve(isValidUser(user).then((err, foundUser) => {
+  //     if (err) {
+  //       return err;
+  //     }
+  //     if (foundUser) {
+  //       console.log('FOUND USER HAPPENED');
+  //       return 'There is already a user associated with this email address.';
+  //     }
+  //     return true;
+  //   }));
+  //
+  // const newUser = new User({
+  //   fname: req.body.fname,
+  //   lname: req.body.lname,
+  //   username: req.body.username,
+  //   email: req.body.email,
+  //   hashedPassword: hashPassword(req.body.password),
+  //   library: [],
+  // });
+  //
+  // if (validation() === true) {
+  //   newUser.save((err) => {
+  //     if (err) {
+  //       res.json({ failure: 'failed to save new user' });
+  //     } else {
+  //       res.json({ newUser });
+  //       // res.redirect('/api/registration')
+  //       console.log('saved the new user!!');
+  //     }
+  //   });
+  // }
+  // res.json({ failure: validation });
 });
 
 // gets the user, gets the user's library
