@@ -19,7 +19,6 @@ function hashPassword(password) {
 
 // ROUTES:
 
-
 router.post('/register', async (req, res) => {
   const isValidUser = (user) => {
     if (!user.fname) {
@@ -71,8 +70,7 @@ router.post('/register', async (req, res) => {
       if (err) {
         res.json({ failure: 'failed to save new user' });
       } else {
-        res.json({ newUser });
-        // res.redirect('/api/registration')
+        res.json({ success: 'saved new user' });
         console.log('saved the new user!!');
       }
     });
@@ -80,40 +78,6 @@ router.post('/register', async (req, res) => {
     console.log(e);
     res.json({ error: e });
   }
-
-  // const validate = user =>
-  //   Promise.resolve(isValidUser(user).then((err, foundUser) => {
-  //     if (err) {
-  //       return err;
-  //     }
-  //     if (foundUser) {
-  //       console.log('FOUND USER HAPPENED');
-  //       return 'There is already a user associated with this email address.';
-  //     }
-  //     return true;
-  //   }));
-  //
-  // const newUser = new User({
-  //   fname: req.body.fname,
-  //   lname: req.body.lname,
-  //   username: req.body.username,
-  //   email: req.body.email,
-  //   hashedPassword: hashPassword(req.body.password),
-  //   library: [],
-  // });
-  //
-  // if (validation() === true) {
-  //   newUser.save((err) => {
-  //     if (err) {
-  //       res.json({ failure: 'failed to save new user' });
-  //     } else {
-  //       res.json({ newUser });
-  //       // res.redirect('/api/registration')
-  //       console.log('saved the new user!!');
-  //     }
-  //   });
-  // }
-  // res.json({ failure: validation });
 });
 
 // gets the user, gets the user's library
@@ -146,10 +110,5 @@ router.post('/read', (req, res) => {
     res.json({ success: true, text: book });
   });
 });
-
-// gets the array of books
-// router.get('/explore', (req,res) => {
-//
-// })
 
 module.exports = router;
