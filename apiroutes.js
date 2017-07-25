@@ -83,16 +83,16 @@ router.post('/register', async (req, res) => {
 // gets the user, gets the user's library
 router.post('/', (req, res) => {
   const userId = req.body.id;
-  User.findById(userId)
-  .populate('library')
-  .exec((err, user) => {
-    if (err) {
-      res.json({ failure: 'failed to find user' });
-    }
-    console.log(user);
-    res.json({ success: true, books: user.library });
+    User.findById(userId)
+    .populate('library')
+    .exec((err, user) => {
+      if (err) {
+        res.json({ failure: 'failed to find user' });
+      }
+      console.log(user);
+      res.json({ success: true, books: user.library });
+    });
   });
-});
 
 router.get('/explore', (req, res) => {
   Book.find()
@@ -101,13 +101,13 @@ router.get('/explore', (req, res) => {
   });
 });
 
-router.post('/read', (req, res) => {
-  const bookId = req.body.id;
+router.get('/read/:bookId', (req, res) => {
+  const bookId = req.params.bookId;
   Book.findById(bookId, (err, book) => {
     if (err) {
       res.json({ failure: 'failed to find book' });
     }
-    res.json({ success: true, text: book });
+    res.json({ success: true, book: book });
   });
 });
 
